@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧩 Zadanie Rekrutacyjne – Aplikacja Wiadomości
 
 ## 🎯 Cel
@@ -108,3 +109,7 @@ Zadanie będzie oceniane na podstawie:
 ---
 
 💡 Powodzenia! W razie pytań skontaktuj się z zespołem BiznesportTech.
+=======
+# INTERVIEW-TASK
+proffessional message application with CRUD operation
+>>>>>>> 8e73027534ce0c9dfbed3fcaddfdde20bdce6f6f
