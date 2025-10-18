@@ -1,0 +1,74 @@
+services:
+  db:
+    container_name: mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: interview123
+      MYSQL_DATABASE: interview
+    ports:
+      - "3307:3306"
+    networks:
+      - backend
+    volumes:
+      - db-vol:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    container_name: backend_api
+    restart: always
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_NAME=interview
+      - DB_USER=root
+      - DB_PASSWORD=interview123
+      - PORT=8080
+
+  frontend:
+    container_name: next_frontend
+    restart: unless-stopped
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - "8081:80"
+    networks:
+      - backend
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: interview123
+
+networks:
+  backend:
+
+volumes:
+  db-vol:
